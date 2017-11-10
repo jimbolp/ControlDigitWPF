@@ -71,9 +71,10 @@ namespace ControlDigit
                 {
                     article = "Не е намерен артикул с този номер";
                 }
+                Customer c = null;
                 try
                 {
-                    Customer c = null;
+                    
                     int i = Int32.Parse(text[0].ToString());
                     switch (i)
                     {
@@ -123,13 +124,13 @@ namespace ControlDigit
                     {
                         customer += c.Name;
                     }
-                    PopulateDataGrid(c, a);
+                    
                 }
                 catch (Exception)
                 {
                     customer = "Няма връзка с базата или не е намерен клиент с този номер!";
                 }
-                
+                PopulateDataGrid(c, a);
                 //textLabel.Content = "Артикул: " + Environment.NewLine + article + Environment.NewLine + "Клиент:" + Environment.NewLine + customer;
             }
         }
