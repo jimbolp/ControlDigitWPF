@@ -5,23 +5,125 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ControlDigit"
         mc:Ignorable="d"
-        Title="MainWindow" Height="253.363" Width="296" SizeToContent="WidthAndHeight" MinWidth="350" MinHeight="260" MaxHeight="480" Loaded="MainWindow1_Loaded" MaxWidth="1024">
+        Title="MainWindow" Height="367" Width="408" SizeToContent="WidthAndHeight" MinWidth="350" MinHeight="260" MaxHeight="768" Loaded="MainWindow1_Loaded" MaxWidth="1024" Foreground="#FF00A48A" Icon="Resources/if_calculator_532810.ico">
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="btn_Calculate_Style" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!--Default Trigger-->
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+
+                            <!--Mouse Over-->
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FFC0C0C0" Offset="0"/>
+                                            <GradientStop Color="#FF747373" Offset="0.6"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+
+                            <!--Mouse Pressed-->
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FFE0E0E0" Offset="2"/>
+                                            <GradientStop Color="#FF717070" Offset="0"/>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Effect" TargetName="border" >
+                                    <Setter.Value>
+                                        <DropShadowEffect ShadowDepth="1"
+                                                            Color="White"
+                                                            Opacity="0.8"
+                                                            BlurRadius="6"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+
+                            <!--Enabled-->
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="96*"/>
-            <RowDefinition Height="63*"/>
-            <RowDefinition Height="70*"/>
+            <RowDefinition Height="90*"/>
+            <RowDefinition Height="110*"/>
+            <RowDefinition Height="110*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="10,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
-        <DataGrid x:Name="dataGridCustomer" Margin="10,3,10,10" IsSynchronizedWithCurrentItem="True" SelectionMode="Single" SelectionUnit="CellOrRowHeader" IsReadOnly="True" MinWidth="100" Grid.Row="2"/>
-        <Label x:Name="textLabel" Margin="10,0,10,1" RenderTransformOrigin="0.5,0.5" MinHeight="24" Height="24" VerticalAlignment="Bottom"/>
-        <DataGrid x:Name="dataGridArticle" Margin="10,4,10,2" IsSynchronizedWithCurrentItem="True" IsReadOnly="True" MinWidth="100" RenderTransformOrigin="0.5,0.5" Grid.Row="1" SelectionUnit="CellOrRowHeader">
+        <DockPanel Height="43" LastChildFill="False" VerticalAlignment="Top" Background="#FF767575"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="9,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <DataGrid x:Name="dataGridCustomer" Margin="9,10,11,10" IsSynchronizedWithCurrentItem="True" SelectionMode="Single" SelectionUnit="CellOrRowHeader" IsReadOnly="True" MinWidth="100" Grid.Row="2" MaxColumnWidth="150" Foreground="Black" ClipboardCopyMode="IncludeHeader" EnableColumnVirtualization="True">
             <DataGrid.ContextMenu>
-                <ContextMenu>
+                <ContextMenu IsTextSearchEnabled="True">
                     <MenuItem Command="ApplicationCommands.SelectAll" Header="SelectAll"/>
                     <MenuItem Command="ApplicationCommands.Copy" Header="Copy"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
+        <DataGrid x:Name="dataGridArticle" Margin="10" IsSynchronizedWithCurrentItem="True" IsReadOnly="True" MinWidth="100" RenderTransformOrigin="0,0" Grid.Row="1" SelectionUnit="CellOrRowHeader" MaxColumnWidth="150" Foreground="Black" ClipboardCopyMode="IncludeHeader" EnableColumnVirtualization="True">
+            <DataGrid.ContextMenu>
+                <ContextMenu IsTextSearchEnabled="True">
+                    <MenuItem Command="ApplicationCommands.SelectAll" Header="SelectAll"/>
+                    <MenuItem Command="ApplicationCommands.Copy" Header="Copy"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        <TextBox x:Name="textLabel" Margin="10,57,10,0" TextWrapping="Wrap" BorderThickness="0" AllowDrop="False" IsInactiveSelectionHighlightEnabled="True" FontSize="18" Foreground="#FFDE1616" FontWeight="Bold" Height="23" VerticalAlignment="Top"/>
+        <Button x:Name="btn_Calculate" Content="Търси" Margin="134,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75" Click="Button_Click" Foreground="White" FontFamily="Verdana" FontSize="10" BorderBrush="#FF00A48A" Height="23" Style="{DynamicResource btn_Calculate_Style}">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFC2C2C2"/>
+                    <GradientStop Color="#FF767575" Offset="0.791"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Image Margin="209,10,10,0" Source="Resources/myphoenix.png" Height="23" VerticalAlignment="Top"/>
     </Grid>
 </Window>

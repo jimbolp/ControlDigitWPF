@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,193 +25,161 @@ namespace ControlDigit
     {
         private bool _connectionEstablished = false;
         private LibraCentralEntities dbCentral = null;
-        private LibraSofiaEntities dbSofia = null;
-        private LibraBurgasEntities dbBurgas = null;
-        private LibraVarnaEntities dbVarna = null;
-        private LibraPlovdivEntities dbPlovdiv = null;
-        private LibraVelikoTyrnovoEntities dbVelikoTyrnovo = null;
+        //private LibraSofiaEntities dbSofia = null;
+        //private LibraBurgasEntities dbBurgas = null;
+        //private LibraVarnaEntities dbVarna = null;
+        //private LibraPlovdivEntities dbPlovdiv = null;
+        //private LibraVelikoTyrnovoEntities dbVelikoTyrnovo = null;
+        //private List<LibraEntities> dataBases = new List<LibraEntities>();
         public MainWindow()
         {
             InitializeComponent();
+        }        
+
+        private int GetFirstDigit(int i)
+        {
+            while (i >= 10)
+                i /= 10;
+            return i;
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void GetDataFromDB(int intVal)
         {
-            if (!isValid(textBox.Text))
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                textBox.Text = "";
-                textLabel.Content = "";
+                dataGridArticle.ItemsSource = null;
+                dataGridCustomer.ItemsSource = null;
+            }));
+            CustomerMasterData c = dbCentral.CustomerMasterDatas.Find(intVal);
+            if (c != null)
+            {
+                PopulateDataGrid(c);
+            }
+            Article a = dbCentral.Articles.Find(intVal);
+            if (a != null)
+            {
+                PopulateDataGrid(a);
+            }
+        }
+
+        private void PopulateDataGrid(CustomerMasterData c = null, Article a = null)
+        {
+            if(c != null)
+                PopulateDataGrid(c);
+            if(a != null)
+                PopulateDataGrid(a);            
+        }
+
+        private void PopulateDataGrid<T>(T obj)
+        {
+            ObservableCollection<T> collection = new ObservableCollection<T>();
+            if (obj != null)
+            {
+                collection.Add(obj);
+            }
+            if (collection != null)
+            {
+                if (obj.GetType() == typeof(CustomerMasterData))
+                {
+                    try
+                    {
+                        this.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            dataGridCustomer.ItemsSource = collection;
+                        }));
+                    }
+                    catch (Exception){ }
+                }
+                else if (obj.GetType() == typeof(Article))
+                {
+                    try
+                    {
+                        this.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            dataGridArticle.ItemsSource = collection;
+                        }));
+                    }
+                    catch (Exception) { }
+                }
+            }
+        }
+
+        private void Calculate(int number)
+        {
+            int result = (7 * ((number / 1) % 10) + 6 * ((number / 10) % 10)
+            + 5 * ((number / 100) % 10) + 4 * ((number / 1000) % 10)
+            + 3 * ((number / 10000) % 10) + 2 * ((number / 100000) % 10));
+            if ((result % 11) == 10)
+                number = number * 10 + 0;
+            else
+                number = number * 10 + (result % 11);
+            textLabel.Text = number.ToString();
+        }
+
+        private bool isValid(string input, out int number)
+        {
+            if(int.TryParse(input, out int i))
+            {
+                number = i;
+                return true;
             }
             else
             {
-                Calculate();
-                if (_connectionEstablished)
-                    GetDataFromDB(textBox.Text);
-            }
-        }
-
-        private void GetDataFromDB(string text)
-        {
-            if (Int32.TryParse(text, out int intVal))
-            {
-                Article a = null; 
-                string article = "";
-                string customer = "";
-                try
-                {
-                    a = dbCentral.Articles.Find(intVal);
-                    if (a == null)
-                    {
-                        article = "Няма артикул с този номер";
-                    }
-                    else
-                    {
-                        article += a.CyrName;
-                    }
-                }
-                catch (Exception)
-                {
-                    article = "Не е намерен артикул с този номер";
-                }
-                Customer c = null;
-                try
-                {
-                    
-                    int i = Int32.Parse(text[0].ToString());
-                    switch (i)
-                    {
-                        case 2:
-                            if (dbSofia == null)
-                                customer = "Няма връзка с база данни dbSofia!";
-                            else
-                                c = dbSofia.Customers.Find(intVal);
-                            break;
-                        case 3:
-                            if (dbBurgas == null)
-                                customer = "Няма връзка с база данни dbBurgas!";
-                            else
-                                c = dbBurgas.Customers.Find(intVal);
-                            break;
-                        case 4:
-                            if (dbVarna == null)
-                                customer = "Няма връзка с база данни dbVarna!";
-                            else
-                                c = dbVarna.Customers.Find(intVal);
-                            break;
-                        case 5:
-                            if (dbPlovdiv == null)
-                                customer = "Няма връзка с база данни dbPlovdiv!";
-                            else
-                                c = dbPlovdiv.Customers.Find(intVal);
-                            break;
-                        case 7:
-                            if (dbVelikoTyrnovo == null)
-                                customer = "Няма връзка с база данни dbVelikoTyrnovo!";
-                            else
-                                c = dbVelikoTyrnovo.Customers.Find(intVal);
-                            break;
-                        default:
-                            if (dbCentral == null)
-                                customer = "Няма връзка с база данни dbCentral!";
-                            else
-                                c = dbCentral.Customers.Find(intVal);
-                            break;
-                    }
-                    if (c == null)
-                    {
-                        if (customer == "")
-                            customer = "Не е намерен клиент с този номер";
-                    }
-                    else
-                    {
-                        customer += c.Name;
-                    }
-                    
-                }
-                catch (Exception)
-                {
-                    customer = "Няма връзка с базата или не е намерен клиент с този номер!";
-                }
-                PopulateDataGrid(c, a);
-                //textLabel.Content = "Артикул: " + Environment.NewLine + article + Environment.NewLine + "Клиент:" + Environment.NewLine + customer;
-            }
-        }
-
-        private void PopulateDataGrid(Customer c, Article a)
-        {
-            ObservableCollection<Article> articles = new ObservableCollection<Article>();
-            if (a != null)
-            {
-                articles.Add(a);
-            }
-            ObservableCollection<Customer> customers = new ObservableCollection<Customer>();
-            if (c != null)
-            {
-                customers.Add(c);
-            }
-            if(articles != null)
-            {
-                dataGridArticle.ItemsSource = articles;
-            }
-            if(customers != null)
-            {
-                dataGridCustomer.ItemsSource = customers;
-            }
-        }
-
-        private void Calculate()
-        {
-            if(int.TryParse(textBox.Text, out int number))
-            {
-                int result = (7 * ((number / 1) % 10) + 6 * ((number / 10) % 10)
-                + 5 * ((number / 100) % 10) + 4 * ((number / 1000) % 10)
-                + 3 * ((number / 10000) % 10) + 2 * ((number / 100000) % 10));
-                if ((result % 11) == 10)
-                    number = number * 10 + 0;
-                else
-                    number = number * 10 + (result % 11);
-                textLabel.Content = number;
-            }
-            
-        }
-
-        private bool isValid(string input)
-        {
-            try
-            {
-                int.Parse(input);
-            }
-            catch
-            {
                 if (input != "" && input != null)
-                    textLabel.Content = "Въведете валиден номер!!!";
+                    textLabel.Text = "Въведете валиден номер!!!";
+                number = 0;
                 return false;
             }
-            return true;
         }
 
         private void MainWindow1_Loaded(object sender, RoutedEventArgs e)
         {
-            string currentDb = "";
             try
             {
                 dbCentral = new LibraCentralEntities();
-                currentDb += "Central - connected;";
+                /*dataBases.Add(dbCentral);
                 dbSofia = new LibraSofiaEntities();
                 currentDb += "Sofia - connected;";
+                dataBases.Add(dbSofia);
                 dbBurgas = new LibraBurgasEntities();
                 currentDb += "Burgas - connected;";
+                dataBases.Add(dbBurgas);
                 dbVarna = new LibraVarnaEntities();
                 currentDb += "Varna - connected;";
+                dataBases.Add(dbVarna);
                 dbPlovdiv = new LibraPlovdivEntities();
                 currentDb += "Plovdiv - connected;";
+                dataBases.Add(dbPlovdiv);
                 dbVelikoTyrnovo = new LibraVelikoTyrnovoEntities();
                 currentDb += "VelikoTyrnovo - connected;";
+                dataBases.Add(dbVelikoTyrnovo);//*/
                 _connectionEstablished = true;
             }
             catch (Exception)
             {
-                textLabel.Content = "No Connection to some of the databases!" + Environment.NewLine + currentDb;
+                textLabel.Text = "No Connection to the database!";
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (isValid(textBox.Text, out int i))
+            {
+                Calculate(i);
+                if (_connectionEstablished)
+                {
+                    if (Int32.TryParse(textBox.Text, out int intVal))
+                    {
+                        Thread t = new Thread(() => GetDataFromDB(intVal));
+                        t.Start();
+                        t.Join();
+                    }
+                }
+            }
+            else
+            {
+                textBox.Text = "";
+                textLabel.Text = "Невалидно число!";
             }
         }
     }

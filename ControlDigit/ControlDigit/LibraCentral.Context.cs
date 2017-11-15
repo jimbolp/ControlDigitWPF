@@ -26,6 +26,6 @@ namespace ControlDigit
         }
     
         public virtual DbSet<Article> Articles { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<CustomerMasterData> CustomerMasterDatas { get; set; }
     }
 }

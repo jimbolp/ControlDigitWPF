@@ -13,7 +13,7 @@ namespace ControlDigit
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class LibraSofiaEntities : DbContext
+    public partial class LibraSofiaEntities : LibraEntities
     {
         public LibraSofiaEntities()
             : base("name=LibraSofiaEntities")
@@ -24,8 +24,5 @@ namespace ControlDigit
         {
             throw new UnintentionalCodeFirstException();
         }
-    
-        public virtual DbSet<Article> Articles { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
     }
 }

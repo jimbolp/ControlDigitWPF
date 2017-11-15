@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\if_calculator_532810.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -43,6 +46,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
@@ -77,6 +81,9 @@
     <Compile Include="Customer.cs">
       <DependentUpon>LibraVelikoTyrnovo.tt</DependentUpon>
     </Compile>
+    <Compile Include="CustomerMasterData.cs">
+      <DependentUpon>LibraCentral.tt</DependentUpon>
+    </Compile>
     <Compile Include="LibraBurgas.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -107,6 +114,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LibraCentral.edmx</DependentUpon>
     </Compile>
+    <Compile Include="LibraEntities.cs" />
     <Compile Include="LibraPlovdiv.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -190,19 +198,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="LibraCentral.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>LibraCentral.Designer.cs</LastGenOutput>
-    </EntityDeploy>
     <EntityDeploy Include="LibraBurgas.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>LibraBurgas.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <None Include="LibraBurgas.edmx.diagram">
       <DependentUpon>LibraBurgas.edmx</DependentUpon>
-    </None>
-    <None Include="LibraCentral.edmx.diagram">
-      <DependentUpon>LibraCentral.edmx</DependentUpon>
     </None>
     <EntityDeploy Include="LibraSofia.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
@@ -212,6 +213,13 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>LibraPlovdiv.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <EntityDeploy Include="LibraCentral.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>LibraCentral.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="LibraCentral.edmx.diagram">
+      <DependentUpon>LibraCentral.edmx</DependentUpon>
+    </None>
     <None Include="LibraPlovdiv.edmx.diagram">
       <DependentUpon>LibraPlovdiv.edmx</DependentUpon>
     </None>
@@ -254,8 +262,8 @@
     </Content>
     <Content Include="LibraCentral.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>LibraCentral.Context.cs</LastGenOutput>
       <DependentUpon>LibraCentral.edmx</DependentUpon>
+      <LastGenOutput>LibraCentral.Context.cs</LastGenOutput>
     </Content>
     <Content Include="LibraCentral.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -302,9 +310,13 @@
       <DependentUpon>LibraVelikoTyrnovo.edmx</DependentUpon>
       <LastGenOutput>LibraVelikoTyrnovo.cs</LastGenOutput>
     </Content>
+    <Resource Include="Resources\if_calculator_532810.ico" />
+    <Resource Include="Resources\logo_phoenix.png" />
+    <Resource Include="Resources\myphoenix.png" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
