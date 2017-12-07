@@ -64,10 +64,10 @@ namespace ControlDigit
 
         private void PopulateDataGrid(CustomerMasterData c = null, Article a = null)
         {
-            if(c != null)
+            if (c != null)
                 PopulateDataGrid(c);
-            if(a != null)
-                PopulateDataGrid(a);            
+            if (a != null)
+                PopulateDataGrid(a);
         }
 
         private void PopulateDataGrid<T>(T obj)
@@ -180,6 +180,22 @@ namespace ControlDigit
             {
                 textBox.Text = "";
                 textLabel.Text = "Невалидно число!";
+            }
+        }
+
+        private void dataGridCustomer_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            if(dataGridCustomer.Items == null || dataGridCustomer.Items.Count == 0)
+            {
+                dataGridCustomer.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void dataGridArticle_SourceUpdated(object sender, DataTransferEventArgs e)
+        {
+            if (dataGridArticle.Items == null || dataGridArticle.Items.Count == 0)
+            {
+                dataGridArticle.Visibility = Visibility.Collapsed;
             }
         }
     }

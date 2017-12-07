@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ControlDigit"
         mc:Ignorable="d"
-        Title="MainWindow" Height="367" Width="408" SizeToContent="WidthAndHeight" MinWidth="350" MinHeight="260" MaxHeight="768" Loaded="MainWindow1_Loaded" MaxWidth="1024" Foreground="#FF00A48A" Icon="Resources/if_calculator_532810.ico">
+        Title="MainWindow" Height="454" Width="625" SizeToContent="WidthAndHeight" MinWidth="400" MinHeight="300" MaxHeight="768" MaxWidth="1024" Loaded="MainWindow1_Loaded" Foreground="#FF00A48A" Icon="Resources/if_calculator_532810.ico">
     <Window.Resources>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -92,38 +92,55 @@
         </Style>
     </Window.Resources>
     <Grid>
+        <!--Grid Row Definitions-->
         <Grid.RowDefinitions>
-            <RowDefinition Height="90*"/>
-            <RowDefinition Height="110*"/>
-            <RowDefinition Height="110*"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <DockPanel Height="43" LastChildFill="False" VerticalAlignment="Top" Background="#FF767575"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="9,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <DataGrid x:Name="dataGridCustomer" Margin="9,10,11,10" IsSynchronizedWithCurrentItem="True" SelectionMode="Single" SelectionUnit="CellOrRowHeader" IsReadOnly="True" MinWidth="100" Grid.Row="2" MaxColumnWidth="150" Foreground="Black" ClipboardCopyMode="IncludeHeader" EnableColumnVirtualization="True">
-            <DataGrid.ContextMenu>
-                <ContextMenu IsTextSearchEnabled="True">
-                    <MenuItem Command="ApplicationCommands.SelectAll" Header="SelectAll"/>
-                    <MenuItem Command="ApplicationCommands.Copy" Header="Copy"/>
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-        </DataGrid>
-        <DataGrid x:Name="dataGridArticle" Margin="10" IsSynchronizedWithCurrentItem="True" IsReadOnly="True" MinWidth="100" RenderTransformOrigin="0,0" Grid.Row="1" SelectionUnit="CellOrRowHeader" MaxColumnWidth="150" Foreground="Black" ClipboardCopyMode="IncludeHeader" EnableColumnVirtualization="True">
-            <DataGrid.ContextMenu>
-                <ContextMenu IsTextSearchEnabled="True">
-                    <MenuItem Command="ApplicationCommands.SelectAll" Header="SelectAll"/>
-                    <MenuItem Command="ApplicationCommands.Copy" Header="Copy"/>
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-        </DataGrid>
-        <TextBox x:Name="textLabel" Margin="10,57,10,0" TextWrapping="Wrap" BorderThickness="0" AllowDrop="False" IsInactiveSelectionHighlightEnabled="True" FontSize="18" Foreground="#FFDE1616" FontWeight="Bold" Height="23" VerticalAlignment="Top"/>
-        <Button x:Name="btn_Calculate" Content="Търси" Margin="134,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75" Click="Button_Click" Foreground="White" FontFamily="Verdana" FontSize="10" BorderBrush="#FF00A48A" Height="23" Style="{DynamicResource btn_Calculate_Style}">
-            <Button.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFC2C2C2"/>
-                    <GradientStop Color="#FF767575" Offset="0.791"/>
-                </LinearGradientBrush>
-            </Button.Background>
-        </Button>
-        <Image Margin="209,10,10,0" Source="Resources/myphoenix.png" Height="23" VerticalAlignment="Top"/>
+
+        <!--Header Dock Panel-->
+        <DockPanel Grid.Row="0" Height="43" LastChildFill="False" VerticalAlignment="Top" Background="#FF767575">
+            <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="9,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+            <Button x:Name="btn_Calculate" Content="Търси" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75" Click="Button_Click" Foreground="White" FontFamily="Verdana" FontSize="10" BorderBrush="#FF00A48A" Height="23" Style="{DynamicResource btn_Calculate_Style}" IsDefault="True">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFC2C2C2"/>
+                        <GradientStop Color="#FF767575" Offset="0.791"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+            </Button>
+            <Image Margin="10,10,10,0" Source="Resources/myphoenix.png" Height="23" VerticalAlignment="Top"/>
+        </DockPanel>
+
+        <!--Read Only Text panel for the converted number-->
+        <Border Grid.Row="1" Padding="5">
+            <TextBox x:Name="textLabel" Grid.Row="1"  TextWrapping="Wrap" BorderThickness="0" AllowDrop="False" IsInactiveSelectionHighlightEnabled="True" FontSize="18" Foreground="#FFDE1616" FontWeight="Bold" Height="23" VerticalAlignment="Top" BorderBrush="Gray"/>
+        </Border>
+
+        <!--Article info - Data Grid-->
+        <Border Grid.Row="2" Padding="3">
+            <DataGrid x:Name="dataGridArticle" IsSynchronizedWithCurrentItem="True" IsReadOnly="True" MinWidth="100" RenderTransformOrigin="0,0" SelectionUnit="CellOrRowHeader" SelectionMode="Single" Foreground="Black" ClipboardCopyMode="IncludeHeader" EnableColumnVirtualization="True" SourceUpdated="dataGridArticle_SourceUpdated">
+                <DataGrid.ContextMenu>
+                    <ContextMenu IsTextSearchEnabled="True">
+                        <MenuItem Command="ApplicationCommands.SelectAll" Header="SelectAll"/>
+                        <MenuItem Command="ApplicationCommands.Copy" Header="Copy"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+        </Border>
+        <!--Customer info - Data Grid-->
+        <Border Grid.Row="3" Padding="3">
+            <DataGrid x:Name="dataGridCustomer" IsSynchronizedWithCurrentItem="True" IsReadOnly="True" MinWidth="100" RenderTransformOrigin="0,0" SelectionUnit="CellOrRowHeader" SelectionMode="Single"  Foreground="Black" ClipboardCopyMode="IncludeHeader" EnableColumnVirtualization="True" SourceUpdated="dataGridCustomer_SourceUpdated" >
+                <DataGrid.ContextMenu>
+                    <ContextMenu IsTextSearchEnabled="True">
+                        <MenuItem Command="ApplicationCommands.SelectAll" Header="SelectAll"/>
+                        <MenuItem Command="ApplicationCommands.Copy" Header="Copy"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+        </Border>
+
     </Grid>
 </Window>
